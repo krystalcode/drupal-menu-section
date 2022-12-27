@@ -2,6 +2,6 @@ name: Menu Section
 type: module
 description: 'Creates site sections with the menu.'
 package: menu
-core: 8.x
+core_version_requirement: ^8.9 || ^9
 dependencies:
   - current_menu
