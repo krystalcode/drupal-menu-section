@@ -12,7 +12,7 @@ class NodeAddSectionMenuRoutes {
 
   public function routes() {
     $defaults = [
-      '_controller' => '\Drupal\node\Controller\NodeController::add',
+      '_entity_form' => 'node.default',
       '_title_callback' => '\Drupal\node\Controller\NodeController::addPageTitle',
     ];
     $requirements = [
