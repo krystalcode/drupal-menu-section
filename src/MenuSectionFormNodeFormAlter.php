@@ -4,6 +4,7 @@ namespace Drupal\menu_section;
 
 use Drupal\menu_link_content\Entity\MenuLinkContent;
 use Drupal\node\NodeInterface;
+use Drupal\system\Entity\Menu;
 
 class MenuSectionFormNodeFormAlter {
 
@@ -38,10 +39,19 @@ class MenuSectionFormNodeFormAlter {
   }
 
   public static function process($form) {
+    $userCurrent = \Drupal::currentUser();
     $form['menu']['enabled'] = ['#type' => 'value', '#value' => TRUE];
     unset($form['menu']['link']['#states']);
     $form['menu']['#open'] = TRUE;
     $form['menu']['link']['title']['#required'] = TRUE;
+    $menu = \Drupal::routeMatch()->getRawParameter('menu');
+    if (!empty($menu)) {
+      $menu_object = Menu::load($menu);
+      $settings = $menu_object->get('third_party_settings');
+      if ($settings['menu_section']['uid'] == $userCurrent->id()) {
+        $form['menu']['#access'] = TRUE;
+      }
+    }
     return $form;
   }
 
