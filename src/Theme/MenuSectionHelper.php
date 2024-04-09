@@ -38,4 +38,15 @@ class MenuSectionHelper {
     return FALSE;
   }
 
+  /**
+   * Get ID of the node for the site section.
+   *
+   * @return false|int
+   *   A node's ID or FALSE.
+   */
+  public function getSectionId() {
+    preg_match('/--(?<id>\d+)$/', $this->cacheContext->getContext(), $matches);
+    return (isset($matches['id'])) ? (int) $matches['id'] : FALSE;
+  }
+
 }
