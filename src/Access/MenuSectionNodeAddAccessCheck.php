@@ -6,8 +6,24 @@ use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\node\NodeTypeInterface;
 use Drupal\system\MenuInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
-class MenuSectionNodeAddAccessCheck {
+class MenuSectionNodeAddAccessCheck implements ContainerInjectionInterface {
+  protected $entityTypeManager;
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('entity_type.manager'));
+  }
+
+
+  public function __construct(EntityTypeManagerInterface $entityTypeManager) {
+    $this->entityTypeManager = $entityTypeManager;
+  }
 
   public function access(AccountInterface $account, NodeTypeInterface $node_type = NULL, MenuInterface $menu = NULL) {
     if ($node_type && $menu) {
@@ -17,7 +33,7 @@ class MenuSectionNodeAddAccessCheck {
         return AccessResult::allowed();
       }
     }
-    return \Drupal::service('access_check.node.add')->access($account, $node_type);
+    return AccessResult::allowedIf($this->entityTypeManager->getAccessControlHandler('node')->createAccess($node_type->id(), $account));
   }
 
 }

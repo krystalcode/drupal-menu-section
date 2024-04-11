@@ -23,6 +23,7 @@ class MenuSectionFormNodeFormAlter {
       if ($available = $nodeType->getThirdPartySetting('menu_ui', 'available_menus', ['main'])) {
         $query->condition('menu_name', array_values($available), 'NOT IN');
       }
+      $query->accessCheck(FALSE);
       $linkIds = $query->execute();
       if ($linkIds) {
         $menu = MenuLinkContent::load(reset($linkIds))->getMenuName();
