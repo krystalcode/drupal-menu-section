@@ -33,7 +33,7 @@ class MenuSectionNodeAddAccessCheck implements ContainerInjectionInterface {
         return AccessResult::allowed();
       }
     }
-    return AccessResult::allowedIf($this->entityTypeManager->getAccessControlHandler('node')->createAccess($node_type->id(), $account));
+    return AccessResult::allowedIf($this->entityTypeManager->getAccessControlHandler('node')->createAccess($node_type?->id(), $account));
   }
 
 }
